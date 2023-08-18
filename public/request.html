@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+
+<label for="ipv4">IP Address</label>
+<input type="text" class="form-input" id="ipv4" name="ipv4" placeholder="xxx.xxx.xxx.xxx"/>
+<br>
+<label for="port">Port</label>
+<input type="text" class="form-input" id="port" name="port" value="3000" placeholder="3000"/>
+<br>
+<input type="submit" value="Submit request" onclick="submitRequest()">
+
+<script>
+  //input mask bundle ip address
+  const ipv4_address = document.getElementById("ipv4");
+  ipv4_address.addEventListener('keypress', (event) => {
+    if (isNaN(event.key) && event.key !== '.') {
+      event.preventDefault();
+      event.stopPropagation();
+      return false;
+    }
+  });
+
+  const port = document.getElementById("port");
+  port.addEventListener('keypress', (event) => {
+    if (isNaN(event.key)) {
+      event.preventDefault();
+      event.stopPropagation();
+      return false;
+    }
+  })
+
+  function submitRequest() {
+    const url = 'curl?ipv4=' + document.getElementById('ipv4').value + '&port=' + document.getElementById('port').value
+
+    fetch(url).then(async (response) => {
+      const res = await response.json();
+
+      const newEl = document.createElement('p');
+      const newContent = document.createTextNode(JSON.stringify(res));
+      newEl.appendChild(newContent);
+
+      document.body.appendChild(newEl)
+
+      return res;
+    }).then((data) => {
+      console.log(data);
+    }).catch((err) => {
+      console.log('Fetch Error :-S', err);
+    });
+  }
+</script>
+</body>
+</html>

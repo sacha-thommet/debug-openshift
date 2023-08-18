@@ -1,4 +1,5 @@
 const express = require('express');
+const path = require('path')
 const app = express();
 const port = process.env.port ?? 3000;
 
@@ -11,6 +12,21 @@ app.get('/', (req, res) => {
 
   res.send(data)
 })
+
+app.get('/curl', async (req, res) => {
+  const data = req.query;
+
+  try {
+    console.log('fetching : ', `http://${data.ipv4}:${data.port}`)
+    const resFetch = await fetch(`http://${data.ipv4}:${data.port}`)
+    res.send({success: resFetch})
+  }
+  catch (e) {
+    res.send({error: e})
+  }
+})
+
+app.use(express.static(path.join(__dirname, '../public')))
 
 app.listen(port, () => {
   console.log(`Debug openshift app listening on port ${port}`)
