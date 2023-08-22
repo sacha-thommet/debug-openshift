@@ -17,12 +17,14 @@ app.get('/curl', async (req, res) => {
   const data = req.query;
 
   try {
-    console.log('fetching : ', `http://debug-openshift:${data.port}`)
-    const resFetch = await fetch(`http://debug-openshift:${data.port}`)
+    const hostname = `http://${data.ipv4}:${data.port}`;
+    console.log('fetching : ', hostname)
+    const resFetch = await fetch(hostname)
     res.send({success: resFetch})
   }
   catch (e) {
-    res.send({error: e})
+    console.error(e)
+    res.send({error: JSON.stringify(e)})
   }
 })
 
